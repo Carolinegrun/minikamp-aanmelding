@@ -19,6 +19,31 @@
     .kabouter { text-align: center; font-size: 2rem; margin-top: 1rem; }
     #successMessage { display: none; text-align: center; background-color: #fff0ee; border: 2px solid #e40521; color: #e40521; margin: 2rem auto; padding: 2rem; max-width: 600px; border-radius: 1rem; }
     #successMessage button { margin-top: 1rem; }
+    .info-icon {
+  cursor: pointer;
+  margin-left: 5px;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.info-text {
+  display: none;
+  position: absolute;
+  top: 1.2rem;
+  left: 0;
+  background: #fff0ee;
+  border: 1px solid #e40521;
+  padding: 0.5rem;
+  width: 250px;
+  font-size: 0.85rem;
+  border-radius: 0.5rem;
+  z-index: 10;
+}
+
+.info-icon:hover .info-text {
+  display: block;
+}
+
   </style>
 </head>
 <body>
@@ -71,10 +96,16 @@
 
     <div id="kinderenVelden"></div>
 
-    <label>
-      <input type="checkbox" name="toestemming_pr" checked>
-      Ik geef toestemming voor gebruik van foto's voor PR-doeleinden
-    </label>
+<label style="position: relative;">
+  <input type="checkbox" name="toestemming_pr" checked>
+  Ik geef toestemming voor gebruik van foto's voor PR-doeleinden
+  <span class="info-icon">ℹ️
+    <span class="info-text">
+      De foto's worden uitsluitend gebruikt voor onze social media en promotiemateriaal (zoals flyers). Ze worden niet verder gedeeld of verkocht.
+    </span>
+  </span>
+</label>
+
 
     <label>
       <input type="checkbox" name="blijven_slapen">
