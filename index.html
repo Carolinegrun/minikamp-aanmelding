@@ -117,49 +117,49 @@
       postcodeError.style.display = regex.test(postcodeInput.value) ? 'none' : 'block';
     });
 
-    function updateKindVelden(aantal) {
-      kinderenContainer.innerHTML = '';
-
-      for (let i = 1; i <= aantal; i++) {
-        const naamLabel = document.createElement('label');
-        naamLabel.textContent = `Naam kind ${i}`;
-        const naamInput = document.createElement('input');
-        naamInput.name = `naam_kind_${i}`;
-        naamInput.required = true;
-
-        const leeftijdLabel = document.createElement('label');
-        leeftijdLabel.textContent = `Leeftijd kind ${i}`;
-        const leeftijdInput = document.createElement('input');
-        leeftijdInput.type = 'number';
-        leeftijdInput.name = `leeftijd_kind_${i}`;
-        leeftijdInput.required = true;
-
-        kinderenContainer.appendChild(naamLabel);
-        kinderenContainer.appendChild(naamInput);
-
-        // Plaats begeleider 2 onder kind 1 bij ≥2 kinderen
-        if (i === 1 && aantal >= 2) {
-          begeleider2.style.display = 'block';
-          begeleider2Input.required = (aantal >= 3);
-          kinderenContainer.appendChild(begeleider2);
+      function updateKindVelden(aantal) {
+        kinderenContainer.innerHTML = '';
+      
+        for (let i = 1; i <= aantal; i++) {
+          const naamLabel = document.createElement('label');
+          naamLabel.textContent = `Naam kind ${i}`;
+          const naamInput = document.createElement('input');
+          naamInput.name = `naam_kind_${i}`;
+          naamInput.required = true;
+      
+          const leeftijdLabel = document.createElement('label');
+          leeftijdLabel.textContent = `Leeftijd kind ${i}`;
+          const leeftijdInput = document.createElement('input');
+          leeftijdInput.type = 'number';
+          leeftijdInput.name = `leeftijd_kind_${i}`;
+          leeftijdInput.required = true;
+      
+          kinderenContainer.appendChild(naamLabel);
+          kinderenContainer.appendChild(naamInput);
+          kinderenContainer.appendChild(leeftijdLabel);
+          kinderenContainer.appendChild(leeftijdInput);
+      
+          // Plaats begeleider 2 onder kind 1 (na naam en leeftijd)
+          if (i === 1 && aantal >= 2) {
+            begeleider2.style.display = 'block';
+            begeleider2Input.required = (aantal >= 3);
+            kinderenContainer.appendChild(begeleider2);
+          }
         }
-
-        kinderenContainer.appendChild(leeftijdLabel);
-        kinderenContainer.appendChild(leeftijdInput);
+      
+        if (aantal < 2) {
+          begeleider2.style.display = 'none';
+          begeleider2Input.required = false;
+          begeleider2Input.value = '';
+        }
       }
-
-      if (aantal < 2) {
-        begeleider2.style.display = 'none';
-        begeleider2Input.required = false;
-        begeleider2Input.value = '';
-      }
-    }
-
-    aantalSelect.addEventListener('change', (e) => {
-      updateKindVelden(Number(e.target.value));
-    });
-
-    updateKindVelden(1);
+      
+      
+          aantalSelect.addEventListener('change', (e) => {
+            updateKindVelden(Number(e.target.value));
+          });
+      
+          updateKindVelden(1);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
