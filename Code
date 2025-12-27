@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Aanmelden Deebeetje Minikamp</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff8f6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      background-color: #e40521;
+      color: white;
+      padding: 1.5rem 1rem;
+      position: relative;
+    }
+
+    header::after {
+      content: '🍄';
+      position: absolute;
+      right: 1rem;
+      bottom: 0.5rem;
+      font-size: 1.8rem;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 0.5rem;
+    }
+
+    .adres-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .adres-row input {
+      flex: 1;
+    }
+
+    button {
+      background-color: #e40521;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      margin-top: 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #c3041c;
+    }
+
+    .kabouter {
+      text-align: center;
+      font-size: 2rem;
+      margin-top: 1rem;
+    }
+
+    #successMessage {
+      display: none;
+      text-align: center;
+      background-color: #fff0ee;
+      border: 2px solid #e40521;
+      color: #e40521;
+      margin: 2rem auto;
+      padding: 2rem;
+      max-width: 600px;
+      border-radius: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Aanmelden Deebeetje Minikamp</h1>
+    <p>De kabouters gaan voor Goud</p>
+  </header>
+
+  <form id="dagkampForm" action="https://formspree.io/f/xpqzpbjz" method="POST">
+    <label>Naam begeleider 1*</label>
+    <input type="text" name="begeleider_1" required>
+
+    <div id="begeleider2Container" style="display:none;">
+      <label>Naam begeleider 2*</label>
+      <input type="text" name="begeleider_2">
+    </div>
+
+    <label>Telefoonnummer*</label>
+    <input type="tel" name="telefoon" required>
+
+    <label>E-mailadres*</label>
+    <input type="email" name="email" required>
+
+    <label>Straatnaam*</label>
+    <input type="text" name="straatnaam" required>
+
+    <div class="adres-row">
+      <div style="flex:1;">
+        <label>Huisnummer*</label>
+        <input type="text" name="huisnummer" required>
+      </div>
+      <div style="flex:1;">
+        <label>Postcode*</label>
+        <input type="text" name="postcode" id="postcode" placeholder="bijv. 1234AB" pattern="[0-9]{4}[A-Za-z]{2}" required>
+        <span id="postcodeError" style="color:red; display:none;">Voer een geldige postcode in (bijv. 1234AB).</span>
+      </div>
+    </div>
+
+    <label>Woonplaats*</label>
+    <input type="text" name="woonplaats" required>
+
+    <label>Aantal kinderen</label>
+    <select name="aantal_kinderen" id="aantalKinderen">
+      <option value="1">1 kind</option>
+      <option value="2">2 kinderen</option>
+      <option value="3">3 kinderen</option>
+      <option value="4">4 kinderen</option>
+      <option value="5">5 kinderen</option>
+    </select>
+
+    <div id="kinderenVelden"></div>
+
+    <label>
+      <input type="checkbox" name="toestemming_pr" checked>
+      Ik geef toestemming voor gebruik van foto's voor PR-doeleinden
+    </label>
+
+    <label>
+      <input type="checkbox" name="blijven_slapen">
+      Mijn kind(eren) blijven slapen
+    </label>
+
+    <label>Bijzonderheden (bijv. dieetwensen)</label>
+    <textarea name="bijzonderheden" rows="4"></textarea>
+
+    <button type="submit">Aanmelden</button>
+  </form>
+
+  <div id="successMessage">
+    <h2>Wat leuk dat je mee komt spelen met ons!</h2>
+    <p>De factuur voor de betaling volgt via de mail.<br>Tot 28 maart!</p>
+    <div class="kabouter">🍄🍄🍄🍄🍄🍄🍄</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('dagkampForm');
+    const successMessage = document.getElementById('successMessage');
+    const kinderenContainer = document.getElementById('kinderenVelden');
+    const aantalSelect = document.getElementById('aantalKinderen');
+    const begeleider2 = document.getElementById('begeleider2Container');
+    const begeleider2Input = begeleider2.querySelector('input');
+    const postcodeInput = document.getElementById('postcode');
+    const postcodeError = document.getElementById('postcodeError');
+
+    // Zet letters automatisch om naar hoofdletters
+    postcodeInput.addEventListener('input', () => {
+      const start = postcodeInput.selectionStart;
+      const end = postcodeInput.selectionEnd;
+      postcodeInput.value = postcodeInput.value.toUpperCase();
+      postcodeInput.setSelectionRange(start, end);
+    });
+
+    // Controleer validatie bij verlaten van het veld
+    postcodeInput.addEventListener('blur', () => {
+      const regex = /^[0-9]{4}[A-Z]{2}$/;
+      if (!regex.test(postcodeInput.value)) {
+        postcodeError.style.display = 'block';
+      } else {
+        postcodeError.style.display = 'none';
+      }
+    });
+
+    function updateKindVelden(aantal) {
+      kinderenContainer.innerHTML = '';
+      for (let i = 1; i <= aantal; i++) {
+        const naamLabel = document.createElement('label');
+        naamLabel.textContent = `Naam kind ${i}`;
+        const naamInput = document.createElement('input');
+        naamInput.name = `naam_kind_${i}`;
+        naamInput.required = true;
+
+        const leeftijdLabel = document.createElement('label');
+        leeftijdLabel.textContent = `Leeftijd kind ${i}`;
+        const leeftijdInput = document.createElement('input');
+        leeftijdInput.type = 'number';
+        leeftijdInput.name = `leeftijd_kind_${i}`;
+        leeftijdInput.required = true;
+
+        kinderenContainer.appendChild(naamLabel);
+        kinderenContainer.appendChild(naamInput);
+        kinderenContainer.appendChild(leeftijdLabel);
+        kinderenContainer.appendChild(leeftijdInput);
+      }
+
+      if (aantal > 1) {
+        begeleider2.style.display = 'block';
+        begeleider2Input.required = true;
+      } else {
+        begeleider2.style.display = 'none';
+        begeleider2Input.required = false;
+        begeleider2Input.value = '';
+      }
+    }
+
+    aantalSelect.addEventListener('change', (e) => {
+      updateKindVelden(Number(e.target.value));
+    });
+
+    updateKindVelden(1);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const regex = /^[0-9]{4}[A-Z]{2}$/;
+      if (!regex.test(postcodeInput.value)) {
+        postcodeError.style.display = 'block';
+        postcodeInput.focus();
+        return;
+      }
+      postcodeError.style.display = 'none';
+
+      const data = new FormData(form);
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        form.style.display = 'none';
+        successMessage.style.display = 'block';
+      } else {
+        alert('Er ging iets mis met het verzenden, probeer het opnieuw.');
+      }
+    });
+  </script>
+</body>
+</html>
